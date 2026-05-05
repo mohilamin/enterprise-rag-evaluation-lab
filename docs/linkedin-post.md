@@ -6,47 +6,50 @@ Status: DRAFT
 
 I built an Enterprise Document Intelligence + RAG Evaluation Lab as a portfolio project.
 
-The goal was to go beyond a generic "chat with PDF" demo. In real companies, AI assistants need more than a plausible answer. They need retrieval quality, citations, stale-document warnings, sensitive-data controls, hallucination-risk scoring, and repeatable evaluation evidence.
+This is not a generic "chat with PDF" demo. The project focuses on a problem companies actually face: can an AI assistant answer from internal documents in a way that is trusted, cited, evaluated, and safe for business use?
 
-What I built:
+What it includes:
 
-- synthetic enterprise document corpus
-- golden question evaluation set
-- document ingestion, chunking, and metadata checks
-- deterministic retrieval baseline
-- cited answer service
+- synthetic enterprise documents
+- golden evaluation questions
+- retrieval index and cited answer service
 - citation validation
-- retrieval accuracy and answer quality reports
+- retrieval accuracy reports
+- answer quality reports
+- hallucination-risk reasons
+- stale/conflict/sensitive-data warning checks
 - FastAPI endpoints and Streamlit dashboard
-- pytest, Ruff, Docker, and GitHub Actions
-
-Current V0.2 evidence includes 40 golden questions, retrieval accuracy reports, answer quality reports, hallucination-risk reasons, and 44 passing tests.
+- 44 passing tests, Ruff, Docker, and GitHub Actions
 
 Tech stack: Python 3.12, pandas, scikit-learn, DuckDB, FastAPI, Streamlit, pytest, Ruff, Docker.
+
+What this project proves: I can build the evaluation and evidence layer around enterprise GenAI systems, not just a chatbot UI.
 
 GitHub: [link placeholder]
 
 Screenshot: [screenshot placeholder]
 
-## Version B: Technical Data Engineering / MLOps
+## Version B: Technical Data Engineering / MLOps Audience
 
-I hardened my Enterprise Document Intelligence + RAG Evaluation Lab into a V0.2 evaluation-focused release.
+I created an Enterprise Document Intelligence + RAG Evaluation Lab to demonstrate the evaluation layer around enterprise RAG.
 
-This is not a generic chat-with-PDF app. The project focuses on the evidence layer enterprise RAG systems need before business users or AI agents can rely on answers.
+The core idea: RAG quality should be measurable. Retrieval misses, missing citations, stale policy context, sensitive-data-like strings, and unsupported answers should show up in evidence files before a system reaches business users.
 
-V0.2 adds:
+The project includes:
 
-- 40 deterministic golden questions with expected source documents and risk flags
+- deterministic synthetic document corpus across HR, IT security, claims, finance, audit, support, procurement, and governance
+- 40-question golden evaluation set with expected document IDs and risk flags
+- TF-IDF retrieval baseline for reproducible local evaluation
+- citation-grounded deterministic answer composer
+- citation validation against retrieved chunks and expected supporting documents
 - retrieval accuracy reports with Hit@1, Hit@3, Hit@5, MRR, misses, and pass/fail by question
 - answer quality reports with answerability accuracy, citation coverage, groundedness, stale/conflict/sensitive warning accuracy, and hallucination-risk reasons
-- citation validation against retrieved chunks and expected supporting documents
-- chunk quality reporting for metadata completeness, stale chunks, sensitive chunks, and empty chunks
-- API responses designed for demos and scorecard inspection
-- expanded tests, now 44 passing locally
+- chunk quality reports for metadata completeness, stale chunks, sensitive chunks, and empty chunks
+- FastAPI, Streamlit, pytest, Ruff, Docker, and CI
 
-The system uses a transparent TF-IDF baseline so results are reproducible without paid APIs. In a real deployment, the same evaluation design could wrap embeddings, vector databases, LangChain/LlamaIndex, Snowflake, Databricks, Airflow, or MLflow.
+Current validation: 44 tests passing and Ruff clean.
 
-Tech stack: Python 3.12, pandas, scikit-learn, DuckDB, FastAPI, Streamlit, pytest, Ruff, Docker.
+This is intentionally a transparent baseline. In a real deployment, the same evaluation framework could wrap embeddings, vector databases, LangChain/LlamaIndex, OpenAI APIs, Snowflake, Databricks, Airflow, or MLflow.
 
 GitHub: [link placeholder]
 

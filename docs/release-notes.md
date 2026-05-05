@@ -22,3 +22,13 @@
 - Improved Streamlit dashboard sections for retrieval metrics, answer quality, risks, golden question exploration, and example cited answers.
 - Expanded tests to cover V0.2 reports, citation validation, API schemas, dashboard data loading, and pipeline outputs.
 - Updated README, metrics, sample outputs, recruiter summary, technical deep dive, and LinkedIn draft documentation.
+
+## V0.3 Showcase Polish
+
+- Reframed the README for public portfolio review with first-screen business context, proof points, architecture, quickstart, evidence outputs, and recruiter-friendly positioning.
+- Added a cleaner Mermaid architecture diagram focused on the RAG evaluation flow from synthetic documents to API/dashboard.
+- Added screenshot instruction docs for executive overview, search lab, answer with citations, RAG evaluation metrics, hallucination risk, and golden question results.
+- Reworked the demo script into a timed three-minute walkthrough.
+- Added GitHub profile setup guidance with repo description, topics, pinned repo blurb, and README headline.
+- Polished LinkedIn draft versions for recruiter and technical data engineering/MLOps audiences.
+- Preserved the existing working code path while improving public presentation and demo readiness.

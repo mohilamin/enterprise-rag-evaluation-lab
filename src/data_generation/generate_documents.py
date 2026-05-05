@@ -241,7 +241,6 @@ def generate_documents() -> None:
     settings = get_settings()
     raw_path = ensure_directory(get_path("raw_documents"))
     documents = _documents()
-    metadata_rows = []
     manifest = {
         "generated_at": date(2026, 5, 5).isoformat(),
         "random_seed": settings["random_seed"],
@@ -258,6 +257,7 @@ def generate_documents() -> None:
             {"issue_type": "no_answer_document_gap", "document_id": "DOC-GAP-001"},
         ],
     }
+    metadata_rows = []
 
     for doc in documents:
         raw_path.joinpath(f"{doc.document_id}.md").write_text(
@@ -287,7 +287,33 @@ def _render_markdown(doc: SyntheticDocument) -> str:
         f"Document ID: {doc.document_id}\n"
         f"Department: {doc.department}\n"
         f"Version: {doc.version}\n\n"
-        f"## Body\n\n{doc.body}\n\n"
+        "## Scope\n\n"
+        f"This synthetic document applies to the {doc.department} process area and related "
+        "business users, reviewers, and control owners. It is generated for portfolio "
+        "testing only and does not describe a real company policy.\n\n"
+        "## Roles and Responsibilities\n\n"
+        f"The document owner is {doc.owner or 'UNASSIGNED OWNER'}. Process performers must "
+        "follow the stated requirements. Reviewers must verify evidence, exceptions, and "
+        "control references before approving use in downstream AI or reporting workflows.\n\n"
+        f"## Procedure Requirements\n\n{doc.body}\n\n"
+        "## Control Requirements\n\n"
+        "Controls must be traceable to source evidence, reviewed by the accountable owner, "
+        "and retained with the synthetic reference identifiers listed below.\n\n"
+        "## Exception Handling\n\n"
+        "Exceptions require documented rationale, business approval, expiration date, and "
+        "follow-up review before the next policy cycle.\n\n"
+        "## Escalation Path\n\n"
+        f"Operational questions escalate first to {doc.department} leadership, then to risk "
+        "or compliance review when evidence is missing, stale, conflicting, or sensitive.\n\n"
+        "## Evidence Requirements\n\n"
+        "Evidence must include source document ID, extraction date, preparer, reviewer, "
+        "control reference, and retention location.\n\n"
+        "## Review Cycle\n\n"
+        f"The document should be reviewed at least annually. Last reviewed date: "
+        f"{doc.last_reviewed_date or 'MISSING'}.\n\n"
+        "## Synthetic Version History\n\n"
+        f"- Version {doc.version}: Synthetic baseline used for deterministic RAG evaluation.\n"
+        "- Prior version: Simulated legacy reference for retrieval and governance testing.\n\n"
         f"## Key Facts\n\n{facts}\n\n"
         f"## Related Controls\n\n{controls}\n"
     )

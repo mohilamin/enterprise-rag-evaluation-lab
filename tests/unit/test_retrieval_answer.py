@@ -57,3 +57,9 @@ def test_sensitive_data_warning() -> None:
     _prepare()
     answer = answer_question("What fields must audit evidence include?")
     assert answer["sensitive_data_warning"] is True
+
+
+def test_answer_contains_hallucination_risk_reasons() -> None:
+    _prepare()
+    answer = answer_question("What is the company travel reimbursement meal limit?")
+    assert "hallucination_risk_reasons" in answer

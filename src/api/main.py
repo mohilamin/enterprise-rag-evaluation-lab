@@ -45,8 +45,23 @@ def chunks() -> list[dict[str, object]]:
 
 
 @app.post("/search")
-def search_endpoint(request: QueryRequest) -> list[dict]:
-    return search(request.query, top_k=request.top_k)
+def search_endpoint(request: QueryRequest) -> dict[str, object]:
+    results = search(request.query, top_k=request.top_k)
+    return {
+        "query": request.query,
+        "top_k": request.top_k,
+        "results": [
+            {
+                "rank": result["rank"],
+                "document_id": result["document_id"],
+                "chunk_id": result["chunk_id"],
+                "title": result["title"],
+                "score": result["final_score"],
+                "snippet": result["snippet"],
+            }
+            for result in results
+        ],
+    }
 
 
 @app.post("/answer")

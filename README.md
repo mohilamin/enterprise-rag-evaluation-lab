@@ -1,20 +1,20 @@
 # Enterprise Document Intelligence + RAG Evaluation Lab
 
 ![Python 3.12](https://img.shields.io/badge/Python-3.12-blue)
-![Tests](https://img.shields.io/badge/tests-pytest-green)
+![Tests](https://img.shields.io/badge/tests-44%20passing-green)
 ![Lint](https://img.shields.io/badge/lint-ruff-purple)
 ![FastAPI](https://img.shields.io/badge/API-FastAPI-009688)
 ![Streamlit](https://img.shields.io/badge/dashboard-Streamlit-FF4B4B)
 
 ## Executive Summary
 
-Large enterprises want GenAI assistants, AI agents, and semantic search over internal documents. A simple "chat with PDF" app is not enough for enterprise use because business users need grounded answers, citations, retrieval metrics, stale-document warnings, sensitive-data controls, and reproducible evaluation evidence.
+This project is a production-style AI Data Engineering and MLOps portfolio lab for evaluating whether enterprise RAG answers can be trusted. It converts synthetic policies, contracts, SOPs, audit files, and support documents into governed chunks, builds a deterministic retrieval index, generates citation-grounded answers, and produces measurable evidence for retrieval accuracy, citation quality, stale-document risk, sensitive-data risk, and hallucination risk.
 
-This project builds a lightweight local RAG evaluation lab that converts synthetic enterprise documents into chunked, indexed, searchable, and measurable knowledge assets.
+It is intentionally not a generic "chat with PDF" demo. The focus is the enterprise evidence layer: golden questions, expected source documents, pass/fail retrieval checks, citation validation, answerability checks, risk reasons, scorecards, API responses, dashboard views, tests, CI, and Docker.
 
-## Business Problem
+## Why Fortune 50 Companies Care
 
-Enterprise knowledge is locked inside policies, contracts, claims documents, SOPs, audit files, manuals, and support guidance. AI assistants fail when retrieval is poor, citations are missing, stale documents are used, or answers are not grounded in evidence.
+Large enterprises want GenAI assistants and AI agents over internal knowledge, but answers become risky when retrieval misses the right policy, citations are absent, stale procedures are used, or sensitive data appears in context. This lab demonstrates how teams can evaluate RAG quality before exposing answers to business users, workflows, or agents.
 
 Core question:
 
@@ -24,48 +24,81 @@ Core question:
 
 ```mermaid
 flowchart LR
-    A["Synthetic Enterprise Documents"] --> B["Document Ingestion"]
-    B --> C["Text Normalization"]
-    C --> D["Chunking + Metadata"]
+    A["Synthetic Enterprise Documents"] --> B["Raw Document Landing Zone"]
+    B --> C["Ingestion + Normalization"]
+    C --> D["Chunking + Metadata Quality Checks"]
     D --> E["TF-IDF Retrieval Index"]
-    E --> F["Search Results"]
-    F --> G["Citation-Grounded Answer"]
-    G --> H["Risk Scoring"]
-    I["Golden Questions"] --> J["Evaluation Metrics"]
+    E --> F["Search + Metadata Reranking"]
+    F --> G["Citation-Grounded Answer Service"]
+    G --> H["Citation Validation + Risk Scoring"]
+    I["Golden Questions"] --> J["Retrieval + Answer Evaluation"]
     F --> J
-    G --> J
-    J --> K["RAG Trust Scorecard"]
+    H --> J
+    J --> K["RAG Trust Scorecards"]
     K --> L["FastAPI"]
     K --> M["Streamlit Dashboard"]
+    L --> N["Business / AI Consumers"]
+    M --> N
 ```
 
 ## What Was Built
 
-- Synthetic enterprise document corpus.
-- Injected document issue manifest.
-- Golden evaluation question set with at least 30 questions.
-- Document ingestion and metadata validation.
-- Text normalization and deterministic chunking.
-- TF-IDF retrieval with metadata-aware reranking.
-- Deterministic answer composer with citations.
-- Hallucination, stale-document, conflict, and sensitive-data risk warnings.
-- Hit@1, Hit@3, Hit@5, MRR, groundedness, citation coverage, and trust scoring.
-- FastAPI service layer.
-- Streamlit dashboard.
-- pytest coverage, Ruff linting, Docker, and GitHub Actions CI.
+- Synthetic enterprise document corpus with controlled issues.
+- 40-question golden evaluation set with expected document IDs and risk flags.
+- Ingestion, normalization, metadata validation, and section-aware chunking.
+- TF-IDF retrieval with deterministic metadata-aware reranking.
+- Deterministic answer composer that cites retrieved chunks or abstains.
+- Citation validation against retrieved chunks and expected supporting documents.
+- Retrieval accuracy report with Hit@1, Hit@3, Hit@5, MRR, misses, and pass/fail by question.
+- Answer quality report with answerability, citation coverage, groundedness, warnings, and hallucination-risk reasons.
+- Chunk quality report for metadata completeness, stale chunks, sensitive chunks, and empty chunks.
+- FastAPI service, Streamlit dashboard, pytest coverage, Ruff linting, Docker, and GitHub Actions.
+
+## Key Evidence Outputs
+
+- `data/raw_documents/injected_document_issue_manifest.json`
+- `data/evaluations/golden_questions.json`
+- `data/scorecards/chunk_quality_report.csv`
+- `data/scorecards/chunk_quality_summary.json`
+- `data/scorecards/retrieval_accuracy_report.csv`
+- `data/scorecards/retrieval_accuracy_report.json`
+- `data/scorecards/answer_quality_report.csv`
+- `data/scorecards/answer_quality_report.json`
+- `data/scorecards/rag_trust_scorecard.csv`
+- `data/scorecards/rag_trust_summary.json`
+
+Sample V0.2 evidence:
+
+```json
+{
+  "total_questions": 40,
+  "hit_at_3": 0.9706,
+  "mrr": 0.9069,
+  "answerability_accuracy": 97.5,
+  "citation_coverage_average": 87.5,
+  "overall_rag_trust_score": 78.5
+}
+```
+
+## RAG Trust Score
+
+The trust score combines retrieval quality, citation coverage, groundedness, hallucination risk, stale-document risk, sensitive-data risk, and answerability accuracy. It is not a claim that the system is production-ready; it is a deterministic evidence score showing how the local RAG baseline behaves against the golden test set.
+
+Full formulas are documented in [docs/metrics.md](docs/metrics.md).
 
 ## Tech Stack
 
 - Python 3.12
-- pandas and numpy
-- scikit-learn
+- pandas, numpy, scikit-learn
 - DuckDB
-- FastAPI and Uvicorn
+- FastAPI, Uvicorn
 - Streamlit
-- pytest and Ruff
-- Docker and GitHub Actions
+- pytest, Ruff
+- Docker, GitHub Actions
 
 ## Fresh Clone Setup
+
+Mac/Linux with Python 3.12:
 
 ```bash
 git clone https://github.com/mohilamin/enterprise-rag-evaluation-lab.git
@@ -78,31 +111,23 @@ python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```
 
-If your default `python` points to Anaconda or Python 3.8, use a clean Python 3.12 environment before running the commands.
+Conda option:
+
+```bash
+conda create -n rag-eval-lab python=3.12 -y
+conda activate rag-eval-lab
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+```
+
+If your default `python` points to Anaconda base or Python 3.8, activate a Python 3.12 virtual environment first and run commands with `python -m ...`.
 
 ## Run Commands
 
-Generate synthetic documents:
-
 ```bash
 python -m src.data_generation.generate_documents
-```
-
-Generate golden questions:
-
-```bash
 python -m src.data_generation.generate_golden_questions
-```
-
-Run the full pipeline:
-
-```bash
 python -m src.pipeline.run_all
-```
-
-Run tests and lint:
-
-```bash
 python -m pytest
 python -m ruff check .
 ```
@@ -119,7 +144,25 @@ Launch the dashboard:
 python -m streamlit run src/dashboard/app.py
 ```
 
-## API Endpoints
+## API Examples
+
+Search:
+
+```bash
+curl -X POST http://127.0.0.1:8000/search \
+  -H "Content-Type: application/json" \
+  -d '{"query": "What controls are required for privileged access?", "top_k": 3}'
+```
+
+Answer:
+
+```bash
+curl -X POST http://127.0.0.1:8000/answer \
+  -H "Content-Type: application/json" \
+  -d '{"question": "What controls are required for privileged access?", "top_k": 3}'
+```
+
+Key endpoints:
 
 - `GET /health`
 - `GET /documents`
@@ -130,64 +173,57 @@ python -m streamlit run src/dashboard/app.py
 - `GET /scorecards`
 - `GET /rag-trust-summary`
 
-## Key Outputs
+## Dashboard
 
-- `data/raw_documents/documents_metadata.csv`
-- `data/raw_documents/injected_document_issue_manifest.json`
-- `data/evaluations/golden_questions.json`
-- `data/chunks/chunks.csv`
-- `data/chunks/chunks.json`
-- `data/index/retrieval_index_metadata.json`
-- `data/processed/rag_evaluation_lab.duckdb`
-- `data/evaluations/retrieval_evaluation.csv`
-- `data/evaluations/answer_evaluation.csv`
-- `data/scorecards/rag_trust_scorecard.csv`
-- `data/scorecards/rag_trust_summary.json`
+The Streamlit dashboard includes:
 
-## Evaluation Metrics
+- Executive Overview
+- Corpus Health
+- Retrieval Metrics
+- Answer Quality Metrics
+- Hallucination Risk
+- Stale, conflict, and sensitive-data warnings
+- Golden question result explorer
+- Search lab
+- Example answer with citations
 
-- Hit@1
-- Hit@3
-- Hit@5
-- MRR
-- Citation coverage score
-- Groundedness score
-- Hallucination risk score
-- Stale document risk score
-- Sensitive data risk score
-- Answerability accuracy
-- Overall RAG trust score
+## Testing
 
-Formulas are documented in [docs/metrics.md](docs/metrics.md).
+V0.2 validation target: at least 35 tests.
 
-## STAR Story
-
-Situation: enterprise teams want GenAI assistants over internal documents, but answers are risky when retrieval is weak, citations are missing, documents are stale, or outputs are not evaluated.
-
-Task: build a document intelligence and RAG evaluation platform that can ingest enterprise-style documents, retrieve grounded evidence, generate cited answers, and measure answer quality.
-
-Action: designed a synthetic document corpus, ingestion pipeline, chunking layer, retrieval index, citation-based answer service, evaluation framework, API, dashboard, tests, and CI/CD workflow.
-
-Result: created a reproducible portfolio project that demonstrates enterprise-ready RAG foundations, including retrieval quality metrics, citation coverage, hallucination-risk scoring, stale-document detection, and audit-friendly evaluation evidence.
+Current local validation: `44 passed`, `ruff check .` passed.
 
 ## Known Limitations
 
 - Synthetic documents only.
-- TF-IDF baseline instead of embedding models.
-- Local files and DuckDB instead of a cloud warehouse or vector database.
-- Deterministic answer composition instead of a paid LLM.
-- No authentication or role-based access in V0.1.
+- TF-IDF baseline instead of embeddings.
+- Deterministic answer composition instead of an LLM.
+- Local DuckDB and files instead of an enterprise warehouse or vector database.
+- Basic Streamlit UI rather than production product design.
+- No authentication, role-based access, or cloud deployment yet.
 
 ## Future Enhancements
 
-- OpenAI API or local LLM answer generation.
+- Embeddings with OpenAI or local models.
 - ChromaDB, LanceDB, pgvector, or Pinecone retrieval backend.
-- LangChain or LlamaIndex integration.
+- LangChain or LlamaIndex orchestration.
 - MLflow evaluation tracking.
 - Airflow or Dagster orchestration.
 - Snowflake or Databricks deployment.
+- OpenLineage or Marquez lineage.
 - Authentication, authorization, and audit logging.
+
+## STAR Story
+
+Situation: enterprise teams want AI assistants over internal documents, but retrieval misses, stale policies, missing citations, and unevaluated answers create operational risk.
+
+Task: build a document intelligence and RAG evaluation lab that can ingest synthetic enterprise documents, retrieve evidence, generate cited answers, and measure whether outputs are trustworthy.
+
+Action: implemented document generation, ingestion, chunking, TF-IDF retrieval, citation validation, deterministic answer composition, hallucination-risk scoring, golden-question evaluation, scorecards, API, dashboard, tests, CI, and Docker.
+
+Result: produced a reproducible local platform with audit-friendly evidence files, 40 golden questions, retrieval and answer-quality reports, a RAG trust score, and 44 passing tests.
 
 ## Project Status
 
-V0.1: first working local RAG evaluation lab.
+- V0.1: working baseline.
+- V0.2: enterprise-grade evaluation hardening with retrieval accuracy, answer quality, citation validation, risk reasons, chunk quality reporting, expanded tests, and improved documentation.

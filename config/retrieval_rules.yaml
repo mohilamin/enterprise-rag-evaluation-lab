@@ -1,0 +1,10 @@
+ranking_weights:
+  vector_similarity: 0.78
+  freshness: 0.08
+  department_match: 0.07
+  exact_keyword: 0.07
+freshness:
+  fresh_boost: 0.04
+  stale_penalty: -0.08
+department_match_boost: 0.05
+exact_keyword_boost: 0.04

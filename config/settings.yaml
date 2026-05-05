@@ -1,0 +1,25 @@
+project_name: Enterprise Document Intelligence + RAG Evaluation Lab
+random_seed: 42
+paths:
+  raw_documents: data/raw_documents
+  processed: data/processed
+  chunks: data/chunks
+  index: data/index
+  evaluations: data/evaluations
+  scorecards: data/scorecards
+chunking:
+  chunk_size_words: 90
+  chunk_overlap_words: 18
+retrieval:
+  top_k: 5
+freshness:
+  stale_document_threshold_days: 365
+scoring_weights:
+  hit_at_3: 0.20
+  mrr: 0.20
+  citation_coverage: 0.15
+  groundedness: 0.20
+  hallucination_risk: 0.10
+  stale_document_risk: 0.05
+  sensitive_data_risk: 0.05
+  answerability_accuracy: 0.05

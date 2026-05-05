@@ -1,0 +1,8 @@
+thresholds:
+  good_hit_at_3: 0.80
+  good_mrr: 0.70
+  minimum_groundedness: 75
+  minimum_citation_coverage: 80
+  high_hallucination_risk: 50
+  stale_document_risk: 40
+  sensitive_data_risk: 40
